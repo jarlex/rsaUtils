@@ -106,3 +106,20 @@ func ParseRsaPublicKeyFromPemStr(pubPEM string) (*rsa.PublicKey, error) {
     }
     return nil, errors.New("key type is not RSA")
 }
+
+// ParseRsaPublicKeyFromPemStr read a public key in PEM format
+// It returns a public key in rsa package type
+func Parsex509CertificateFromPemStr(certPEM string) (*x509.Certificate, error) {
+    certPEM = strings.Replace(certPEM, "\\n", "\n", -1)
+    block, _ := pem.Decode([]byte(certPEM))
+    if block == nil {
+        return nil, errors.New("failed to parse PEM block containing the certificate")
+    }
+    
+    cert, err := x509.ParseCertificate(block.Bytes)
+    if err != nil {
+        return nil, errors.New("key value not is a valid x509 cert")
+    }
+    
+    return cert, nil
+}
